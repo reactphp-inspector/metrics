@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Inspector\Collector;
+namespace ReactInspector\Collector;
 
-use React\EventLoop\LoopInterface;
-use Rx\ObservableInterface;
-use WyriHaximus\React\Inspector\CollectorInterface;
-use WyriHaximus\React\Inspector\GlobalState;
-use WyriHaximus\React\Inspector\Metric;
 use function ApiClients\Tools\Rx\observableFromArray;
+use React\EventLoop\LoopInterface;
+use ReactInspector\CollectorInterface;
+use ReactInspector\GlobalState;
+use ReactInspector\Metric;
+use Rx\ObservableInterface;
 
 final class MetricCollector implements CollectorInterface
 {
@@ -26,7 +26,7 @@ final class MetricCollector implements CollectorInterface
         return observableFromArray([
             new Metric(
                 'inspector.metrics',
-                (float)count(GlobalState::get())
+                (float)\count(GlobalState::get())
             ),
         ]);
     }

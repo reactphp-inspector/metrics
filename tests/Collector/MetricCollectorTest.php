@@ -1,23 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Tests\Inspector\Collector;
+namespace ReactInspector\Tests\Collector;
 
-use ApiClients\Tools\TestUtilities\TestCase;
 use React\EventLoop\Factory;
+use ReactInspector\Collector\MetricCollector;
+use ReactInspector\GlobalState;
+use ReactInspector\Metric;
 use Rx\React\Promise;
-use WyriHaximus\React\Inspector\Collector\MetricCollector;
-use WyriHaximus\React\Inspector\GlobalState;
-use WyriHaximus\React\Inspector\Metric;
+use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
 
-final class MetricCollectorTest extends TestCase
+/**
+ * @internal
+ */
+final class MetricCollectorTest extends AsyncTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         GlobalState::clear();
         parent::setUp();
     }
 
-    public function testBasics()
+    public function testBasics(): void
     {
         $collector = new MetricCollector(Factory::create());
 

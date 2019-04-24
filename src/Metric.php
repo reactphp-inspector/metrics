@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Inspector;
+namespace ReactInspector;
 
 final class Metric
 {
@@ -28,7 +28,7 @@ final class Metric
     {
         $this->key = $key;
         $this->value = $value;
-        $this->time = $time ?? microtime(true);
+        $this->time = $time ?? \microtime(true);
     }
 
     public function __toString(): string

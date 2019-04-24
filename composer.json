@@ -1,6 +1,6 @@
 {
-  "name": "wyrihaximus/react-inspector",
-  "description": "Inspect react/* packages for metrics and other insights                               ",
+  "name": "react-inspector/metrics",
+  "description": "☄ Metrics stream",
   "license": "MIT",
   "authors": [
     {
@@ -13,30 +13,30 @@
     "php": "^7.2",
     "api-clients/rx": "^2.2",
     "psr/container": "^1.0",
+    "react-inspector/global-state": "dev-master",
     "reactivex/rxphp": "^2.0",
     "wyrihaximus/get-in-packages-composer.jason": "^1.0",
     "wyrihaximus/ticking-promise": "^1.6"
   },
   "require-dev": {
-    "api-clients/test-utilities": "^5.0"
+    "wyrihaximus/async-test-utilities": "^1.0"
   },
   "autoload": {
     "psr-4": {
-      "WyriHaximus\\React\\Inspector\\": "src/"
-    },
-    "files": ["src/bootstrap_include.php"]
+      "ReactInspector\\": "src/"
+    }
   },
   "autoload-dev": {
     "psr-4": {
-      "WyriHaximus\\React\\Tests\\Inspector\\": "src/"
+      "ReactInspector\\Tests\\": "tests/"
     }
   },
   "suggest": {
-    "wyrihaximus/react-inspector-cpu-usage": "Measure the CPU usage of your application and it's child processes",
-    "wyrihaximus/react-inspector-event-loop": "Measure what is going through the event loop",
-    "wyrihaximus/react-inspector-memory-usage": "Message the memory usage of the current PHP process",
-    "wyrihaximus/react-inspector-stream": "Measure what is going through fread/fwrite calls from react/stream",
-    "wyrihaximus/react-inspector-bunny": "Measure what is going through fread/fwrite calls from bunny/bunny"
+    "react-inspector/cpu-usage": "Measure the CPU usage of your application and it's child processes",
+    "react-inspector/event-loop": "Measure what is going through the event loop",
+    "react-inspector/memory-usage": "Message the memory usage of the current PHP process",
+    "react-inspector/stream": "Measure what is going through fread/fwrite calls from react/stream",
+    "react-inspector/bunny": "Measure what is going through fread/fwrite calls from bunny/bunny"
   },
   "config": {
     "sort-packages": true,
@@ -47,7 +47,7 @@
   "extra": {
     "react-inspector": {
       "collectors": {
-        "WyriHaximus\\React\\Inspector\\Collector": "src/Collector"
+        "ReactInspector\\Collector": "src/Collector"
       },
       "metrics": [
         "inspector.metrics"

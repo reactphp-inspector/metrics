@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Inspector;
+namespace ReactInspector;
 
 use Rx\ObservableInterface;
-use Rx\Subject\Subject;
 
 interface MetricsStreamInterface extends ObservableInterface
 {

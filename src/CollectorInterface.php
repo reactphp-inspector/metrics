@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Inspector;
+namespace ReactInspector;
 
-use React\EventLoop\LoopInterface;
 use Rx\ObservableInterface;
 
 interface CollectorInterface

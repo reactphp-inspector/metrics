@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Inspector;
+namespace ReactInspector;
 
+use function ApiClients\Tools\Rx\observableFromArray;
 use Psr\Container\ContainerInterface;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
 use Rx\DisposableInterface;
 use Rx\ObserverInterface;
 use Rx\Subject\Subject;
-use function ApiClients\Tools\Rx\observableFromArray;
 use function WyriHaximus\get_in_packages_composer;
 use function WyriHaximus\get_in_packages_composer_with_path;
 
@@ -91,10 +91,10 @@ final class Metrics extends Subject implements MetricsStreamInterface
     {
         if ($this->timer === null) {
             $this->setUpCollectors();
-            $this->timer = $this->loop->addPeriodicTimer($this->interval, function () {
+            $this->timer = $this->loop->addPeriodicTimer($this->interval, function (): void {
                 observableFromArray($this->activeCollectors)->flatMap(function (CollectorInterface $collector) {
                     return $collector->collect();
-                })->subscribe(function (Metric $metric) {
+                })->subscribe(function (Metric $metric): void {
                     GlobalState::set($metric->getKey(), $metric->getValue());
                 });
                 $this->tick();
@@ -104,7 +104,7 @@ final class Metrics extends Subject implements MetricsStreamInterface
         return parent::_subscribe($observer);
     }
 
-    private function setUpResetGroups()
+    private function setUpResetGroups(): void
     {
         foreach (get_in_packages_composer('extra.react-inspector.reset') as $package => $resetMetricGroups) {
             foreach ($resetMetricGroups as $group => $metrics) {
@@ -136,11 +136,11 @@ final class Metrics extends Subject implements MetricsStreamInterface
                 if (!$fileinfo->isFile()) {
                     continue;
                 }
-                $fileName = $path . str_replace('/', '\\', $fileinfo->getFilename());
-                $class = $namespacePrefix . '\\' . substr(substr($fileName, strlen($path)), 0, -4);
+                $fileName = $path . \str_replace('/', '\\', $fileinfo->getFilename());
+                $class = $namespacePrefix . '\\' . \substr(\substr($fileName, \strlen($path)), 0, -4);
                 if (
-                    class_exists($class) &&
-                    is_subclass_of($class, CollectorInterface::class) &&
+                    \class_exists($class) &&
+                    \is_subclass_of($class, CollectorInterface::class) &&
                     !(new \ReflectionClass($class))->isInterface()
                 ) {
                     $this->collectors[] = $class;
@@ -149,9 +149,9 @@ final class Metrics extends Subject implements MetricsStreamInterface
         }
     }
 
-    private function tick()
+    private function tick(): void
     {
-        $time = microtime(true);
+        $time = \microtime(true);
         $state = GlobalState::get();
         foreach ($this->resetGroups as $group) {
             if (!isset($this->resetGroupsMetrics[$group])) {

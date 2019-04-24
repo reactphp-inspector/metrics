@@ -1,37 +1,40 @@
 <?php declare(strict_types=1);
 
-namespace WyriHaximus\React\Tests\Inspector;
+namespace ReactInspector\Tests;
 
-use PHPUnit\Framework\TestCase;
 use React\EventLoop\Factory;
-use WyriHaximus\React\Inspector\GlobalState;
-use WyriHaximus\React\Inspector\Metric;
-use WyriHaximus\React\Inspector\Metrics;
-use function Clue\React\Block\await;
+use ReactInspector\GlobalState;
+use ReactInspector\Metric;
+use ReactInspector\Metrics;
+use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
 use function WyriHaximus\React\timedPromise;
 
-final class MetricsTest extends TestCase
+/**
+ * @internal
+ */
+final class MetricsTest extends AsyncTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
         GlobalState::clear();
     }
 
-    public function testBasic()
+    public function testBasic(): void
     {
         $loop = Factory::create();
 
         $metricsCollection = [];
-        $loop->futureTick(function () use ($loop, &$metricsCollection) {
+        $loop->futureTick(function () use ($loop, &$metricsCollection): void {
             $metrics = new Metrics($loop, ['ticks'], 1);
-            $metrics->subscribe(function ($metric) use (&$metricsCollection) {
+            $metrics->subscribe(function ($metric) use (&$metricsCollection): void {
                 $metricsCollection[] = $metric;
             });
         });
 
-        $begin = microtime(true);
-        await(timedPromise($loop, 5), $loop, 10);
-        $end = microtime(true);
+        $begin = \microtime(true);
+        $this->await(timedPromise($loop, 5), $loop, 10);
+        $end = \microtime(true);
 
         self::assertCount(4, $metricsCollection);
         /** @var Metric $metric */
