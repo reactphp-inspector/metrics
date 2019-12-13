@@ -3,37 +3,41 @@
 namespace ReactInspector\Collector;
 
 use function ApiClients\Tools\Rx\observableFromArray;
-use React\EventLoop\LoopInterface;
 use ReactInspector\CollectorInterface;
-use ReactInspector\GlobalState;
+use ReactInspector\Measurement;
 use ReactInspector\Metric;
+use ReactInspector\Tag;
 use Rx\ObservableInterface;
 
 final class MetricCollector implements CollectorInterface
 {
     /**
-     * @var LoopInterface
+     * @var float
      */
-    private $loop;
+    private $startTime;
 
-    public function __construct(LoopInterface $loop)
+    public function __construct()
     {
-        $this->loop = $loop;
+        $this->startTime = \hrtime(true) * 1e-9;
     }
 
     public function collect(): ObservableInterface
     {
         return observableFromArray([
             new Metric(
-                'inspector.metrics',
-                (float)\count(GlobalState::get())
+                'inspector',
+                [
+                    new Tag('reactphp_inspector_internal', 'true'),
+                ],
+                [
+                    new Measurement(0.0, new Tag('measurement', 'metrics')),
+                    new Measurement((\hrtime(true) * 1e-9) - $this->startTime, new Tag('measurement', 'uptime')),
+                ]
             ),
         ]);
     }
 
     public function cancel(): void
     {
-        unset($this->loop);
-        $this->loop = null;
     }
 }

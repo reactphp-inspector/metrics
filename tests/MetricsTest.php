@@ -3,7 +3,7 @@
 namespace ReactInspector\Tests;
 
 use React\EventLoop\Factory;
-use ReactInspector\GlobalState;
+use ReactInspector\Collector\MetricCollector;
 use ReactInspector\Metric;
 use ReactInspector\Metrics;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
@@ -14,41 +14,36 @@ use function WyriHaximus\React\timedPromise;
  */
 final class MetricsTest extends AsyncTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        GlobalState::clear();
-    }
-
     public function testBasic(): void
     {
         $loop = Factory::create();
 
         $metricsCollection = [];
         $loop->futureTick(function () use ($loop, &$metricsCollection): void {
-            $metrics = new Metrics($loop, ['ticks'], 1);
+            $metrics = new Metrics($loop, 1, new MetricCollector());
             $metrics->subscribe(function ($metric) use (&$metricsCollection): void {
                 $metricsCollection[] = $metric;
             });
         });
 
         $begin = \microtime(true);
-        $this->await(timedPromise($loop, 5), $loop, 10);
+        $this->await(timedPromise($loop, 5), $loop, 10.0);
         $end = \microtime(true);
 
         self::assertCount(4, $metricsCollection);
         /** @var Metric $metric */
         foreach ($metricsCollection as $index => $metric) {
-            self::assertSame('inspector.metrics', $metric->getKey());
+            self::assertSame('inspector', $metric->name());
             self::assertTrue(
-                $begin < $metric->getTime() &&
-                $end > $metric->getTime()
+                $begin < $metric->time() &&
+                $end > $metric->time()
             );
+            foreach ($metric->measurements() as $measurement) {
+                foreach ($measurement->tags() as $tag) {
+                    self::assertSame('measurement', $tag->key());
+                    self::assertTrue(\in_array($tag->value(), ['metrics', 'uptime'], true));
+                }
+            }
         }
-
-        self::assertSame(0.0, $metricsCollection[0]->getValue());
-        self::assertSame(1.0, $metricsCollection[1]->getValue());
-        self::assertSame(1.0, $metricsCollection[2]->getValue());
-        self::assertSame(1.0, $metricsCollection[3]->getValue());
     }
 }
