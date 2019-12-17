@@ -25,7 +25,7 @@ final class MetricCollector implements CollectorInterface
     {
         return observableFromArray([
             new Metric(
-                'inspector',
+                'reactphp_inspector',
                 [
                     new Tag('reactphp_inspector_internal', 'true'),
                 ],
