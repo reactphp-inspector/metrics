@@ -2,16 +2,16 @@
 
 namespace ReactInspector;
 
-use Rx\ObservableInterface;
+use Rx\Observable;
 
 interface CollectorInterface
 {
     /**
      * Request a array of metrics.
      *
-     * @return ObservableInterface<Metric[]>
+     * @return Observable<Metric[]>
      */
-    public function collect(): ObservableInterface;
+    public function collect(): Observable;
 
     /**
      * Cancel all outstanding operations.

@@ -7,7 +7,7 @@ use ReactInspector\CollectorInterface;
 use ReactInspector\Measurement;
 use ReactInspector\Metric;
 use ReactInspector\Tag;
-use Rx\ObservableInterface;
+use Rx\Observable;
 
 final class MetricCollector implements CollectorInterface
 {
@@ -21,7 +21,7 @@ final class MetricCollector implements CollectorInterface
         $this->startTime = \hrtime(true) * 1e-9;
     }
 
-    public function collect(): ObservableInterface
+    public function collect(): Observable
     {
         return observableFromArray([
             new Metric(
