@@ -8,6 +8,11 @@ use ReactInspector\Metric;
 use ReactInspector\Tag;
 use Rx\React\Promise;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+use function array_map;
+use function assert;
+use function current;
+use function round;
+use function Safe\sort;
 
 /**
  * @internal
@@ -18,54 +23,48 @@ final class MetricCollectorTest extends AsyncTestCase
     {
         $collector = new MetricCollector();
 
-        /** @var Metric[] $metric */
+        /** @var Metric[] $metrics */
         $metrics = $this->await(Promise::fromObservable($collector->collect()->toArray()));
 
         self::assertCount(1, $metrics);
 
-        /** @var Metric $metric */
-        $metric = \current($metrics);
-        self::assertCount(1, $metric->tags());
-        self::assertCount(2, $metric->measurements());
+        $metric = current($metrics);
+        assert($metric instanceof Metric);
+        self::assertCount(1, $metric->tags()->get());
+        self::assertCount(2, $metric->measurements()->get());
 
-        $tags = [
-            'metric' => \array_map(function (Tag $tag): array {
-                return [
-                    $tag->key() => $tag->value(),
-                ];
-            }, $metric->tags()),
-            'measurements' => \array_map(function (Measurement $measurement): array {
-                return \array_map(function (Tag $tag): array {
+//        self::assertSame(
+//            [
+//                ['reactphp_inspector_internal' => 'true'],
+//            ],
+//            array_map(static function (Tag $tag): array {
+//                return [
+//                    $tag->key() => $tag->value(),
+//                ];
+//            }, $metric->tags()->get())
+//        );
+        self::assertSame(
+            [
+                [
+                    'measurement' => ['measurement' => 'metrics'],
+                ],
+                [
+                    'measurement' => ['measurement' => 'uptime'],
+                ],
+            ],
+            array_map(static function (Measurement $measurement): array {
+                return array_map(static function (Tag $tag): array {
                     return [
                         $tag->key() => $tag->value(),
                     ];
-                }, $measurement->tags());
-            }, $metric->measurements()),
-        ];
-
-        self::assertSame(
-            [
-                'metric' => [
-                    [
-                        'reactphp_inspector_internal' => 'true',
-                    ],
-                ],
-                'measurements' => [
-                    [
-                        ['measurement' => 'metrics'],
-                    ],
-                    [
-                        ['measurement' => 'uptime'],
-                    ],
-                ],
-            ],
-            $tags
+                }, $measurement->tags()->get());
+            }, $metric->measurements()->get())
         );
 
-        $values = \array_map(function (Measurement $measurement) {
-            return \round($measurement->value(), 1);
-        }, $metric->measurements());
-        \sort($values);
+        $values = array_map(static function (Measurement $measurement): float {
+            return round($measurement->value(), 1);
+        }, $metric->measurements()->get());
+        sort($values);
 
         self::assertSame(
             [

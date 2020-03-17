@@ -7,9 +7,7 @@ use Rx\Observable;
 interface CollectorInterface
 {
     /**
-     * Request a array of metrics.
-     *
-     * @return Observable<Metric[]>
+     * Request a stream of metrics.
      */
     public function collect(): Observable;
 

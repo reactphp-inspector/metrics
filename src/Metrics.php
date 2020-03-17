@@ -2,53 +2,44 @@
 
 namespace ReactInspector;
 
-use function ApiClients\Tools\Rx\observableFromArray;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
 use Rx\DisposableInterface;
+use Rx\Observable;
 use Rx\ObserverInterface;
 use Rx\Subject\Subject;
+use function ApiClients\Tools\Rx\observableFromArray;
 
 final class Metrics extends Subject implements MetricsStreamInterface
 {
-    /**
-     * @var LoopInterface
-     */
-    private $loop;
+    private LoopInterface $loop;
+
+    private float $interval;
+
+    private ?TimerInterface $timer = null;
+
+    /** @var array<int, CollectorInterface> */
+    private array $collectors = [];
 
     /**
-     * @var float
-     */
-    private $interval;
-
-    /**
-     * @var TimerInterface|null
-     */
-    private $timer;
-
-    /**
-     * @var CollectorInterface[]
-     */
-    private $collectors = [];
-
-    /**
-     * @param LoopInterface        $loop
-     * @param float                $interval
-     * @param CollectorInterface[] $collectors
+     * @param array<int, CollectorInterface> $collectors
      */
     public function __construct(LoopInterface $loop, float $interval, CollectorInterface ...$collectors)
     {
-        $this->loop = $loop;
-        $this->interval = $interval;
+        $this->loop       = $loop;
+        $this->interval   = $interval;
         $this->collectors = $collectors;
     }
 
     public function removeObserver(ObserverInterface $observer): bool
     {
         $return = parent::removeObserver($observer);
-        if (!$this->hasObservers()) {
-            $this->loop->cancelTimer($this->timer);
-            $this->timer = null;
+        if (! $this->hasObservers()) {
+            if ($this->timer instanceof TimerInterface) {
+                $this->loop->cancelTimer($this->timer);
+                $this->timer = null;
+            }
+
             foreach ($this->collectors as $index => $instance) {
                 $instance->cancel();
             }
@@ -62,8 +53,8 @@ final class Metrics extends Subject implements MetricsStreamInterface
     protected function _subscribe(ObserverInterface $observer): DisposableInterface
     {
         if ($this->timer === null) {
-            $collect = function (): void {
-                observableFromArray($this->collectors)->flatMap(function (CollectorInterface $collector) {
+            $collect     = function (): void {
+                observableFromArray($this->collectors)->flatMap(static function (CollectorInterface $collector): Observable {
                     return $collector->collect();
                 })->subscribe(function (Metric $metric): void {
                     $this->onNext($metric);

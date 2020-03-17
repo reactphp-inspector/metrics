@@ -4,9 +4,15 @@ namespace ReactInspector\Tests;
 
 use React\EventLoop\Factory;
 use ReactInspector\Collector\MetricCollector;
+use ReactInspector\CollectorInterface;
 use ReactInspector\Metric;
 use ReactInspector\Metrics;
+use Rx\Observable;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+use function ApiClients\Tools\Rx\observableFromArray;
+use function assert;
+use function in_array;
+use function microtime;
 use function WyriHaximus\React\timedPromise;
 
 /**
@@ -18,32 +24,58 @@ final class MetricsTest extends AsyncTestCase
     {
         $loop = Factory::create();
 
+        $disposable        = null;
         $metricsCollection = [];
-        $loop->futureTick(function () use ($loop, &$metricsCollection): void {
-            $metrics = new Metrics($loop, 1, new MetricCollector());
-            $metrics->subscribe(function ($metric) use (&$metricsCollection): void {
+        $collector         = new class implements CollectorInterface {
+            private bool $collectCalled = false;
+            private bool $cancelCalled  = false;
+
+            public function collect(): Observable
+            {
+                $this->collectCalled = true;
+
+                return observableFromArray([]);
+            }
+
+            public function cancel(): void
+            {
+                $this->cancelCalled = true;
+            }
+
+            public function allCalled(): bool
+            {
+                return $this->collectCalled && $this->cancelCalled;
+            }
+        };
+        $loop->futureTick(static function () use ($loop, &$metricsCollection, &$disposable, $collector): void {
+            $metrics    = new Metrics($loop, 1, new MetricCollector(), $collector);
+            $disposable = $metrics->subscribe(static function ($metric) use (&$metricsCollection): void {
                 $metricsCollection[] = $metric;
             });
         });
 
-        $begin = \microtime(true);
+        $begin = microtime(true);
         $this->await(timedPromise($loop, 5), $loop, 10.0);
-        $end = \microtime(true);
+        $end = microtime(true);
 
         self::assertCount(4, $metricsCollection);
-        /** @var Metric $metric */
         foreach ($metricsCollection as $index => $metric) {
-            self::assertSame('inspector', $metric->name());
+            assert($metric instanceof Metric);
+            self::assertSame('reactphp_inspector', $metric->config()->name());
             self::assertTrue(
                 $begin < $metric->time() &&
                 $end > $metric->time()
             );
-            foreach ($metric->measurements() as $measurement) {
-                foreach ($measurement->tags() as $tag) {
+            foreach ($metric->measurements()->get() as $measurement) {
+                foreach ($measurement->tags()->get() as $tag) {
                     self::assertSame('measurement', $tag->key());
-                    self::assertTrue(\in_array($tag->value(), ['metrics', 'uptime'], true));
+                    self::assertTrue(in_array($tag->value(), ['metrics', 'uptime'], true));
                 }
             }
         }
+
+        self::assertNotNull($disposable);
+        $disposable->dispose();
+        self::assertTrue($collector->allCalled());
     }
 }
