@@ -1,11 +1,11 @@
 # ReactPHP Inspector Metrics stream
 
-[![Linux Build Status](https://travis-ci.org/reactphp-inspector/metrics.png)](https://travis-ci.org/reactphp-inspector/metrics)
+![Continuous Integration](https://github.com/reactphp-inspector/metrics/workflows/Continuous%20Integration/badge.svg)
 [![Latest Stable Version](https://poser.pugx.org/react-inspector/metrics/v/stable.png)](https://packagist.org/packages/react-inspector/metrics)
-[![Total Downloads](https://poser.pugx.org/react-inspector/metrics/downloads.png)](https://packagist.org/packages/react-inspector/metrics)
+[![Total Downloads](https://poser.pugx.org/react-inspector/metrics/downloads.png)](https://packagist.org/packages/react-inspector/metrics/stats)
 [![Code Coverage](https://scrutinizer-ci.com/g/reactphp-inspector/metrics/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/reactphp-inspector/metrics/?branch=master)
+[![Type Coverage](https://shepherd.dev/github/reactphp-inspector/metrics/coverage.svg)](https://shepherd.dev/github/reactphp-inspector/metrics)
 [![License](https://poser.pugx.org/react-inspector/metrics/license.png)](https://packagist.org/packages/react-inspector/metrics)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/reactphp-inspector/metrics/badge.svg)](https://travis-ci.org/reactphp-inspector/metrics)
 
 ### Installation ###
 
