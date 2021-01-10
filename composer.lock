@@ -257,16 +257,16 @@
         },
         {
             "name": "thecodingmachine/safe",
-            "version": "v1.1.1",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "04f9ffae372a9816d4472dfb7bcf6126b623a9df"
+                "reference": "a8ab0876305a4cdaef31b2350fcb9811b5608dbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/04f9ffae372a9816d4472dfb7bcf6126b623a9df",
-                "reference": "04f9ffae372a9816d4472dfb7bcf6126b623a9df",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/a8ab0876305a4cdaef31b2350fcb9811b5608dbc",
+                "reference": "a8ab0876305a4cdaef31b2350fcb9811b5608dbc",
                 "shasum": ""
             },
             "require": {
@@ -287,15 +287,21 @@
                 "psr-4": {
                     "Safe\\": [
                         "lib/",
+                        "deprecated/",
                         "generated/"
                     ]
                 },
                 "files": [
+                    "deprecated/apc.php",
+                    "deprecated/libevent.php",
+                    "deprecated/mssql.php",
+                    "deprecated/stats.php",
+                    "lib/special_cases.php",
                     "generated/apache.php",
-                    "generated/apc.php",
                     "generated/apcu.php",
                     "generated/array.php",
                     "generated/bzip2.php",
+                    "generated/calendar.php",
                     "generated/classobj.php",
                     "generated/com.php",
                     "generated/cubrid.php",
@@ -324,14 +330,12 @@
                     "generated/inotify.php",
                     "generated/json.php",
                     "generated/ldap.php",
-                    "generated/libevent.php",
                     "generated/libxml.php",
                     "generated/lzf.php",
                     "generated/mailparse.php",
                     "generated/mbstring.php",
                     "generated/misc.php",
                     "generated/msql.php",
-                    "generated/mssql.php",
                     "generated/mysql.php",
                     "generated/mysqli.php",
                     "generated/mysqlndMs.php",
@@ -363,7 +367,6 @@
                     "generated/sqlsrv.php",
                     "generated/ssdeep.php",
                     "generated/ssh2.php",
-                    "generated/stats.php",
                     "generated/stream.php",
                     "generated/strings.php",
                     "generated/swoole.php",
@@ -377,8 +380,7 @@
                     "generated/yaml.php",
                     "generated/yaz.php",
                     "generated/zip.php",
-                    "generated/zlib.php",
-                    "lib/special_cases.php"
+                    "generated/zlib.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -386,7 +388,7 @@
                 "MIT"
             ],
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
-            "time": "2020-05-04T15:25:36+00:00"
+            "time": "2020-10-28T17:51:34+00:00"
         },
         {
             "name": "wyrihaximus/ticking-promise",
