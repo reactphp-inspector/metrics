@@ -10,15 +10,17 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^7.4 || ^8.0",
     "api-clients/rx": "^2.2",
     "react-inspector/metric": "^1.0",
-    "react/event-loop": "^1.1",
+    "react/event-loop": "^1.2",
     "reactivex/rxphp": "^2.0",
     "thecodingmachine/safe": "^1.0"
   },
   "require-dev": {
-    "wyrihaximus/async-test-utilities": "^2.0"
+    "squizlabs/php_codesniffer": "^3.6.1",
+    "wyrihaximus/async-test-utilities": "^4.0.6",
+    "wyrihaximus/ticking-promise": "^3.0"
   },
   "suggest": {
     "react-inspector/bunny": "Measure what is going through fread/fwrite calls from bunny/bunny",
@@ -28,7 +30,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.4"
+      "php": "7.4.7"
     },
     "sort-packages": true
   },
