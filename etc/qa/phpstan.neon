@@ -4,4 +4,4 @@ parameters:
 			- Rx\Subject\Subject
 
 includes:
-	- vendor/wyrihaximus/async-test-utilities/rules.neon
+	- ../../vendor/wyrihaximus/async-test-utilities/rules.neon
