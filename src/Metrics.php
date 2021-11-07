@@ -35,12 +35,12 @@ final class Metrics extends Subject implements MetricsStreamInterface
     {
         $return = parent::removeObserver($observer);
         if (! $this->hasObservers()) {
-            if ($this->timer instanceof TimerInterface) {
+            if ($this->timer !== null) {
                 $this->loop->cancelTimer($this->timer);
                 $this->timer = null;
             }
 
-            foreach ($this->collectors as $index => $instance) {
+            foreach ($this->collectors as $instance) {
                 $instance->cancel();
             }
 
