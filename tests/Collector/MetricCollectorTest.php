@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace ReactInspector\Tests\Collector;
 
@@ -8,6 +10,7 @@ use ReactInspector\Metric;
 use ReactInspector\Tag;
 use Rx\React\Promise;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+
 use function array_map;
 use function assert;
 use function current;

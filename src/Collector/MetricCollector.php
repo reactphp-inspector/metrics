@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace ReactInspector\Collector;
 
@@ -10,6 +12,7 @@ use ReactInspector\Metric;
 use ReactInspector\Tag;
 use ReactInspector\Tags;
 use Rx\Observable;
+
 use function ApiClients\Tools\Rx\observableFromArray;
 use function hrtime;
 

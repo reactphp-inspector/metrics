@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace ReactInspector;
 
@@ -8,6 +10,7 @@ use Rx\DisposableInterface;
 use Rx\Observable;
 use Rx\ObserverInterface;
 use Rx\Subject\Subject;
+
 use function ApiClients\Tools\Rx\observableFromArray;
 
 final class Metrics extends Subject implements MetricsStreamInterface
@@ -21,9 +24,6 @@ final class Metrics extends Subject implements MetricsStreamInterface
     /** @var array<int, CollectorInterface> */
     private array $collectors = [];
 
-    /**
-     * @param array<int, CollectorInterface> $collectors
-     */
     public function __construct(LoopInterface $loop, float $interval, CollectorInterface ...$collectors)
     {
         $this->loop       = $loop;
@@ -50,6 +50,7 @@ final class Metrics extends Subject implements MetricsStreamInterface
         return $return;
     }
 
+    // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     protected function _subscribe(ObserverInterface $observer): DisposableInterface
     {
         if ($this->timer === null) {

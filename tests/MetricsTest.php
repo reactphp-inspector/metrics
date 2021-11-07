@@ -1,14 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace ReactInspector\Tests;
 
-use React\EventLoop\Factory;
+use React\EventLoop\Loop;
 use ReactInspector\Collector\MetricCollector;
 use ReactInspector\CollectorInterface;
 use ReactInspector\Metric;
 use ReactInspector\Metrics;
 use Rx\Observable;
 use WyriHaximus\AsyncTestUtilities\AsyncTestCase;
+
 use function ApiClients\Tools\Rx\observableFromArray;
 use function assert;
 use function in_array;
@@ -22,7 +25,7 @@ final class MetricsTest extends AsyncTestCase
 {
     public function testBasic(): void
     {
-        $loop = Factory::create();
+        $loop = Loop::get();
 
         $disposable        = null;
         $metricsCollection = [];
@@ -55,7 +58,7 @@ final class MetricsTest extends AsyncTestCase
         });
 
         $begin = microtime(true);
-        $this->await(timedPromise($loop, 5), $loop, 10.0);
+        $this->await(timedPromise(5), 10.0);
         $end = microtime(true);
 
         self::assertCount(4, $metricsCollection);
